@@ -1,39 +1,37 @@
-'use client';
- 
-import * as React from 'react';
-import { useEdgeStore } from '@/app/lib/edgestore';
- 
-export default function Page() {
-  const [file, setFile] = React.useState<File>();
-  const { edgestore } = useEdgeStore();
- 
-  return (
-    <div>
-      <input
-        type="file"
-        onChange={(e) => {
-          setFile(e.target.files?.[0]);
-        }}
-      />
-      <button
-        onClick={async () => {
-          if (file) {
-            const res = await edgestore.publicFiles.upload({
-              file,
-              onProgressChange: (progress) => {
-                // you can use this to show a progress bar
-                console.log(progress);
-              },
-            });
-            // you can run some server action or api here
-            // to add the necessary data to your database
-            console.log(res);
+'use client'; // Menandakan bahwa ini adalah Client Component
 
-          }
-        }}
-      >
-        Upload
-      </button>
-    </div>
+import { SingleImageDropzone } from '@/components/SingleImageDropzone';
+import DownloadButton from '@/components/DownloadButton';
+import { getDownloadUrl } from '@edgestore/react/utils';
+
+function DownloadLink({ url }: { url: string }) {
+  const downloadUrl = getDownloadUrl(url, 'new-file-name.jpg');
+
+  return (
+    <a href={downloadUrl} download>
+      Click to Download
+    </a>
   );
 }
+
+const MyPage = () => {
+  const fileUrl = 'https://edgestore.example.com/path/to/file.jpg'; // URL file yang diunggah ke EdgeStore
+
+  return (
+    <div>
+      <h1>Upload Gambar</h1>
+      {/* Komponen dropzone untuk mengunggah gambar */}
+      <SingleImageDropzone width={300} height={200} />
+      
+      <h2>File Download Example</h2>
+      {/* Komponen download button */}
+      <DownloadButton url={fileUrl} />
+
+      <h2>Download Link</h2>
+      {/* Komponen download link untuk unduh file */}
+      <DownloadLink url={fileUrl} />
+    </div>
+  );
+};
+
+export default MyPage;
