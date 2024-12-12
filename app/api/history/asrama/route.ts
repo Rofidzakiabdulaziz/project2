@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import pool from "@/lib/db"; 
+import pool from "@/app/lib/db"; 
 
 export async function POST(req: NextRequest) {
     try {
-      const { fullname, kelas, nis, activity, borrow_time, equipment_name } = await req.json();
+      const { fullname, kelas, nis, activity, borrow_time, equipment_name, status } = await req.json();
   
-      if (!fullname || !kelas || !activity || !borrow_time || !equipment_name) {
+      if (!fullname || !kelas || !activity || !borrow_time || !equipment_name || !status) {
         return NextResponse.json(
           { error: "Missing required fields" },
           { status: 400 }
@@ -13,10 +13,10 @@ export async function POST(req: NextRequest) {
       }
   
       const query = `
-        INSERT INTO history_asrama (fullname, kelas, nis, activity, borrow_time, equipment_name)
-        VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`;
+        INSERT INTO history_asrama (fullname, kelas, nis, activity, borrow_time, equipment_name, status )
+        VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`;
       
-      const values = [fullname, kelas, nis, activity, borrow_time, equipment_name || null];
+      const values = [fullname, kelas, nis, activity, borrow_time, equipment_name, status || null];
   
       const result = await pool.query(query, values);
       const history = result[0]; 
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
   export async function GET() {
     try {
       const result = await pool.query(`
-        SELECT id, fullname, kelas, nis, activity, borrow_time, equipment_name, return_time, created_at, updated_at
+        SELECT id, fullname, kelas, nis, activity, borrow_time, equipment_name, return_time, status , created_at, updated_at
         FROM history_asrama
       `);
   
