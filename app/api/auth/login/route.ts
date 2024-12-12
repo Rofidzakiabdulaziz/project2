@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import pool from "@/src/app/lib/db"; 
+import pool from "@/app/lib/db"; 
 import { sign } from "jsonwebtoken"; 
 
 const JWT_SECRET = process.env.JWT_SECRET || "bazma"; 

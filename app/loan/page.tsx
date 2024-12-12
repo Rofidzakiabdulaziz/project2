@@ -22,7 +22,11 @@ export default function LoanPage() {
       try {
         const response = await fetch("/api/equipments/sekolah");
         const data: Equipment[] = await response.json();
-        setEquipmentList(data);
+        const filteredData = data.filter(
+          (equipment) => equipment.status === "Baik"
+        );
+
+        setEquipmentList(filteredData);
       } catch (error) {
         console.error("Error fetching equipment:", error);
       }
@@ -31,10 +35,9 @@ export default function LoanPage() {
     fetchEquipment();
   }, []);
 
-  // Handle loan action
   const handleLoan = (equipmentName: string) => {
     setMessage(`Successfully loaned ${equipmentName}`);
-    setTimeout(() => setMessage(""), 3000); 
+    setTimeout(() => setMessage(""), 3000);
   };
 
   return (
@@ -60,16 +63,25 @@ export default function LoanPage() {
                 {equipment.description}
               </p>
               <p className="text-gray-500 mb-2 text-sm">
-                Status: {equipment.status}
-              </p>
-              <p className="text-gray-500 mb-4 text-sm">
-                Quantity: {equipment.quantity}
+                Status:{" "}
+                <span
+                  className={
+                    equipment.quantity > 0 ? "text-green-500" : "text-red-500"
+                  }
+                >
+                  {equipment.quantity > 0 ? "Available" : "Not Available"}
+                </span>
               </p>
               <button
                 onClick={() => handleLoan(equipment.name_equipment)}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                className={`px-4 py-2 rounded transition ${
+                  equipment.quantity > 0
+                    ? "bg-blue-500 text-white hover:bg-blue-600"
+                    : "bg-gray-400 text-gray-700 cursor-not-allowed"
+                }`}
+                disabled={equipment.quantity === 0}
               >
-                Loan
+                {equipment.quantity > 0 ? "Loan" : "Empty"}
               </button>
             </div>
           ))}

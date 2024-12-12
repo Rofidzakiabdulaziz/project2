@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import pool  from "@/src/app/lib/db"; 
+import pool  from "@/app/lib/db"; 
 import bcrypt from "bcryptjs";
 
 export async function GET() {

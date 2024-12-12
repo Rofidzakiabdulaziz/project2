@@ -17,13 +17,16 @@ export default function LoanPage() {
   const [equipmentList, setEquipmentList] = useState<Equipment[]>([]);
   const [message, setMessage] = useState("");
 
-  // Fetch data from API
   useEffect(() => {
     const fetchEquipment = async () => {
       try {
         const response = await fetch("/api/equipments/asrama");
         const data: Equipment[] = await response.json();
-        setEquipmentList(data);
+        const filteredData = data.filter(
+          (equipment) => equipment.status === "Baik"
+        );
+
+        setEquipmentList(filteredData);
       } catch (error) {
         console.error("Error fetching equipment:", error);
       }
@@ -32,20 +35,17 @@ export default function LoanPage() {
     fetchEquipment();
   }, []);
 
-  // Handle loan action
   const handleLoan = (equipmentName: string) => {
     setMessage(`Successfully loaned ${equipmentName}`);
-    setTimeout(() => setMessage(""), 3000); // Hapus pesan setelah 3 detik
+    setTimeout(() => setMessage(""), 3000);
   };
 
   return (
     <div className="bg-white min-h-screen p-8">
-      <h2 className="text-3xl font-bold text-center mb-8">Inventory Asrama</h2>
+      <h2 className="text-3xl font-bold text-center mb-8">Inventory Sekolah</h2>
 
-      {/* Kontainer Card yang Rata Tengah */}
       <div className="flex justify-center items-center">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Render Card dari Data */}
           {equipmentList.map((equipment) => (
             <div
               key={equipment.id}
@@ -63,23 +63,31 @@ export default function LoanPage() {
                 {equipment.description}
               </p>
               <p className="text-gray-500 mb-2 text-sm">
-                Status: {equipment.status}
-              </p>
-              <p className="text-gray-500 mb-4 text-sm">
-                Quantity: {equipment.quantity}
+                Status:{" "}
+                <span
+                  className={
+                    equipment.quantity > 0 ? "text-green-500" : "text-red-500"
+                  }
+                >
+                  {equipment.quantity > 0 ? "Available" : "Not Available"}
+                </span>
               </p>
               <button
                 onClick={() => handleLoan(equipment.name_equipment)}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                className={`px-4 py-2 rounded transition ${
+                  equipment.quantity > 0
+                    ? "bg-blue-500 text-white hover:bg-blue-600"
+                    : "bg-gray-400 text-gray-700 cursor-not-allowed"
+                }`}
+                disabled={equipment.quantity === 0}
               >
-                Loan
+                {equipment.quantity > 0 ? "Loan" : "Empty"}
               </button>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Pesan Konfirmasi */}
       {message && (
         <div className="mt-8 text-center text-green-500 text-lg font-semibold">
           {message}
