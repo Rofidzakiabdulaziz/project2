@@ -8,7 +8,7 @@ export default function Navbar() {
           <div className="flex-1 md:flex md:items-center md:gap-12">
             <Link className="block text-blue-500" href="#">
               <span className="sr-only">Home</span>
-              <Link className="group relative inline-block focus:outline-none focus:ring" href="/">
+              <Link className="group relative inline-block focus:outline-none focus:ring" href="/home">
                 <span
                   className="absolute inset-0 translate-x-1.5 translate-y-1.5 bg-blue-500 transition-transform group-hover:translate-x-0 group-hover:translate-y-0"
                 ></span>
