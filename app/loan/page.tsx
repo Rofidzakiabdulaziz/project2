@@ -20,7 +20,7 @@ export default function LoanPage() {
   useEffect(() => {
     const fetchEquipment = async () => {
       try {
-        const response = await fetch("/api/equipments/asrama");
+        const response = await fetch("/api/equipments/sekolah");
         const data: Equipment[] = await response.json();
         const filteredData = data.filter(
           (equipment) => equipment.status === "Baik"
