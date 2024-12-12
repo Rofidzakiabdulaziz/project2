@@ -1,11 +1,11 @@
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
+import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
     <>
-      <Navbar />
+      <Header />
       <section className="bg-gray-50">
         <div className="mx-auto max-w-screen-xl px-4 py-72 lg:flex lg:h-auto lg:items-center">
           <div className="mx-auto max-w-xl text-center">

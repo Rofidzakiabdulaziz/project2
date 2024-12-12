@@ -1,5 +1,5 @@
 "use client";
-import Navbar from "@/components/Navbar";
+import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useEffect, useState } from "react";
 
@@ -44,8 +44,8 @@ export default function LoanPage() {
 
   return (
     <>
-      <Navbar />
-      <div className="bg-white min-h-screen p-8">
+      <Header />
+      <div className="bg-gray-50 min-h-screen p-8">
         <h2 className="text-3xl font-bold text-center mb-8">
           Inventory Sekolah
         </h2>

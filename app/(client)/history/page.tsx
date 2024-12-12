@@ -1,7 +1,7 @@
 import { FaUserCircle } from "react-icons/fa";
 import { MdOutlineDescription, MdAccessTime } from "react-icons/md";
 import { FiTool } from "react-icons/fi";
-import Navbar from "@/components/Navbar";
+import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export default function HistoryPage() {
@@ -29,8 +29,8 @@ export default function HistoryPage() {
 
   return (
     <>
-      <Navbar />
-      <div className="bg-gray-100 min-h-screen p-8">
+      <Header />
+      <div className="bg-gray-50 min-h-screen p-8">
         <h2 className="text-3xl font-extrabold text-center text-blue-600 mb-8">
           Loan History
         </h2>

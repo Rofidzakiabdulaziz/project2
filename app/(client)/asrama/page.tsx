@@ -1,5 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 interface Equipment {
   id: number;
@@ -41,58 +43,64 @@ export default function LoanPage() {
   };
 
   return (
-    <div className="bg-white min-h-screen p-8">
-      <h2 className="text-3xl font-bold text-center mb-8">Inventory Asrama</h2>
+    <>
+      <Header />
+      <div className="bg-gray-50 min-h-screen p-8">
+        <h2 className="text-3xl font-bold text-center mb-8">
+          Inventory Asrama
+        </h2>
 
-      <div className="flex justify-center items-center">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {equipmentList.map((equipment) => (
-            <div
-              key={equipment.id}
-              className="bg-gray-100 rounded shadow-md p-4 max-w-xs flex flex-col items-center"
-            >
-              <img
-                src={equipment.image}
-                alt={equipment.name_equipment}
-                className="rounded mb-4"
-              />
-              <h3 className="text-xl font-semibold mb-2 text-center">
-                {equipment.name_equipment}
-              </h3>
-              <p className="text-gray-600 mb-4 text-center">
-                {equipment.description}
-              </p>
-              <p className="text-gray-500 mb-2 text-sm">
-                Status:{" "}
-                <span
-                  className={
-                    equipment.quantity > 0 ? "text-green-500" : "text-red-500"
-                  }
-                >
-                  {equipment.quantity > 0 ? "Available" : "Not Available"}
-                </span>
-              </p>
-              <button
-                onClick={() => handleLoan(equipment.name_equipment)}
-                className={`px-4 py-2 rounded transition ${
-                  equipment.quantity > 0
-                    ? "bg-blue-500 text-white hover:bg-blue-600"
-                    : "bg-gray-400 text-gray-700 cursor-not-allowed"
-                }`}
-                disabled={equipment.quantity === 0}
+        <div className="flex justify-center items-center">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {equipmentList.map((equipment) => (
+              <div
+                key={equipment.id}
+                className="bg-gray-100 rounded shadow-md p-4 max-w-xs flex flex-col items-center"
               >
-                {equipment.quantity > 0 ? "Loan" : "Empty"}
-              </button>
-            </div>
-          ))}
+                <img
+                  src={equipment.image}
+                  alt={equipment.name_equipment}
+                  className="rounded mb-4"
+                />
+                <h3 className="text-xl font-semibold mb-2 text-center">
+                  {equipment.name_equipment}
+                </h3>
+                <p className="text-gray-600 mb-4 text-center">
+                  {equipment.description}
+                </p>
+                <p className="text-gray-500 mb-2 text-sm">
+                  Status:{" "}
+                  <span
+                    className={
+                      equipment.quantity > 0 ? "text-green-500" : "text-red-500"
+                    }
+                  >
+                    {equipment.quantity > 0 ? "Available" : "Not Available"}
+                  </span>
+                </p>
+                <button
+                  onClick={() => handleLoan(equipment.name_equipment)}
+                  className={`px-4 py-2 rounded transition ${
+                    equipment.quantity > 0
+                      ? "bg-blue-500 text-white hover:bg-blue-600"
+                      : "bg-gray-400 text-gray-700 cursor-not-allowed"
+                  }`}
+                  disabled={equipment.quantity === 0}
+                >
+                  {equipment.quantity > 0 ? "Loan" : "Empty"}
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {message && (
-        <div className="mt-8 text-center text-green-500 text-lg font-semibold">
-          {message}
-        </div>
-      )}
-    </div>
+        {message && (
+          <div className="mt-8 text-center text-green-500 text-lg font-semibold">
+            {message}
+          </div>
+        )}
+      </div>
+      <Footer />
+    </>
   );
 }

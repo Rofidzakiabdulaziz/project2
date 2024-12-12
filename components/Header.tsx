@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function Navbar() {
+export default function Header() {
   return (
     <header className="bg-white">
       <div className="mx-auto max-w-screen-xl my-2 px-4 sm:px-6 lg:px-8">
