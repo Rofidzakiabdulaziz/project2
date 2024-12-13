@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import pool from "@/lib/db"; 
+import pool from "@/app/lib/db"; 
 import { Equipment } from "@/app/types/equipment"
 export async function POST(req: { json: () => PromiseLike<{ name_equipment: any; image: any; description: any; quantity: any; status: any; availability: any; }> | { name_equipment: any; image: any; description: any; quantity: any; status: any; availability: any; }; }) {
   try {
