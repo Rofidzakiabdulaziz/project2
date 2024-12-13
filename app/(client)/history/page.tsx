@@ -1,5 +1,8 @@
+
 "use client";
 import { useEffect, useState } from "react";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 interface History {
   id: number;
@@ -45,6 +48,8 @@ export default function LoanPage() {
   }, []);
 
   return (
+    <>
+    <Header />
     <div className="bg-white min-h-screen p-8">
       <h2 className="text-3xl font-bold text-center mb-8">Loan History</h2>
 
@@ -98,5 +103,7 @@ export default function LoanPage() {
         </table>
       </div>
     </div>
+     <Footer />
+    </>
   );
 }
