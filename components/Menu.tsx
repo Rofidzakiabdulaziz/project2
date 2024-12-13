@@ -15,19 +15,19 @@ const menuItems = [
             {
                 icon: "/teacher.png",
                 label: "Sch Equipment",
-                href: "/equipment/sekolah",
+                href: "/list/sekolah",
                 visible: ["admin", "teacher"],
             },
             {
                 icon: "/exam.png",
                 label: "Dorm Equipment",
-                href: "/equipment/sekolah",
+                href: "/list/asrama",
                 visible: ["admin", "teacher", "student", "parent"],
             },
             {
                 icon: "/exam.png",
                 label: "History",
-                href: "/history",
+                href: "/list/history",
                 visible: ["admin", "teacher", "student", "parent"],
             },
         ],
