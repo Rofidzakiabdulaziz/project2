@@ -1,109 +1,198 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+interface Equipment {
+  id: number;
+  name_equipment: string;
+  image: string;
+  description: string | null;
+  quantity: number;
+  status: string;
+  availability: boolean;
+  created_at: string;
+  updated_at: string;
+}
 
 export default function DashboardPage() {
-  const [items, setItems] = useState([
-    {
-      id: 1,
-      name: "Laptop",
-      description: "A high-performance laptop for study or project work.",
-      imageUrl: "https://via.placeholder.com/300x200.png?text=Laptop",
-    },
 
-    {
-      id: 2,
-      name: "Projector",
-      description: "Portable projector for presentations and events.",
-      imageUrl: "https://via.placeholder.com/300x200.png?text=Projector",
-    },
-  ]);
-
-  const [newItem, setNewItem] = useState({
-    name: "",
+  const [equipmentList, setEquipmentList] = useState<Equipment[]>([]);
+  const [formData, setFormData] = useState({
+    name_equipment: "",
+    image: "",
     description: "",
-    imageUrl: "",
+    quantity: 0,
+    status: "Baik",
+    availability: true,
   });
+  const [message, setMessage] = useState("");
 
-  const handleAddItem = () => {
-    if (newItem.name && newItem.description && newItem.imageUrl) {
-      setItems((prevItems) => [
-        ...prevItems,
-        {
-          id: Date.now(), // Unique ID
-          name: newItem.name,
-          description: newItem.description,
-          imageUrl: newItem.imageUrl,
+  // Fetch data from the API
+  useEffect(() => {
+    const fetchEquipment = async () => {
+      try {
+        const response = await fetch("/api/equipments/asrama", {
+          method: "GET",
+        });
+        const data = await response.json();
+        if (data.error) {
+          setMessage(data.error);
+        } else {
+          setEquipmentList(data);
+        }
+      } catch (error) {
+        setMessage("Failed to fetch equipment");
+      }
+    };
+
+    fetchEquipment();
+  }, []);
+
+  // Handle form submission to add new equipment
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch("/api/equipments/asrama", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      ]);
-      setNewItem({ name: "", description: "", imageUrl: "" }); // Reset form
-    } else {
-      alert("Please fill in all fields!");
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+      if (result.error) {
+        setMessage(result.error);
+      } else {
+        setMessage(result.message);
+        setEquipmentList((prev) => [...prev, result.data]); // Add new data to the list
+        setFormData({
+          name_equipment: "",
+          image: "",
+          description: "",
+          quantity: 0,
+          status: "Baik",
+          availability: true,
+        }); // Reset form
+      }
+    } catch (error) {
+      setMessage("Failed to add equipment");
     }
   };
 
-  const handleDeleteItem = (id: number) => {
-    setItems((prevItems) => prevItems.filter((item) => item.id !== id));
-  };
-
   return (
-    <div className="bg-white min-h-screen p-8">
-      <h2 className="text-3xl font-bold text-center mb-8">
-        Admin - Manage Inventory
-      </h2>
+    <div className="p-8 bg-gray-100 min-h-screen">
+      <h1 className="text-2xl font-bold mb-6">Equipment Management</h1>
 
-      {/* Form Tambah Barang */}
-      <div className="mb-8 max-w-md mx-auto bg-gray-100 p-4 rounded shadow-md">
-        <h3 className="text-xl font-semibold mb-4">Add New Item</h3>
-        <input
-          type="text"
-          placeholder="Item Name"
-          className="w-full mb-2 p-2 border rounded"
-          value={newItem.name}
-          onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
-        />
-        <textarea
-          placeholder="Description"
-          className="w-full mb-2 p-2 border rounded"
-          value={newItem.description}
-          onChange={(e) =>
-            setNewItem({ ...newItem, description: e.target.value })
-          }
-        ></textarea>
-        <input
-          type="text"
-          placeholder="Image URL"
-          className="w-full mb-2 p-2 border rounded"
-          value={newItem.imageUrl}
-          onChange={(e) => setNewItem({ ...newItem, imageUrl: e.target.value })}
-        />
-        <button
-          onClick={handleAddItem}
-          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
-        >
-          Add Item
-        </button>
-      </div>
+      {/* Message */}
+      {message && <div className="mb-4 text-red-500">{message}</div>}
 
-      {/* Daftar Barang */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {items.map((item) => (
-          <div
-            key={item.id}
-            className="bg-gray-100 rounded shadow-md p-4 max-w-xs flex flex-col items-center"
+      {/* Form to add equipment */}
+      <form className="bg-white p-4 shadow mb-8" onSubmit={handleSubmit}>
+        <h2 className="text-lg font-semibold mb-4">Add New Equipment</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input
+            type="text"
+            placeholder="Equipment Name"
+            value={formData.name_equipment}
+            onChange={(e) =>
+              setFormData({ ...formData, name_equipment: e.target.value })
+            }
+            className="p-2 border rounded"
+            required
+          />
+          <input
+            type="text"
+            placeholder="Image URL"
+            value={formData.image}
+            onChange={(e) =>
+              setFormData({ ...formData, image: e.target.value })
+            }
+            className="p-2 border rounded"
+          />
+          <textarea
+            placeholder="Description"
+            value={formData.description || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, description: e.target.value })
+            }
+            className="p-2 border rounded"
+          ></textarea>
+          <input
+            type="number"
+            placeholder="Quantity"
+            value={formData.quantity}
+            onChange={(e) =>
+              setFormData({ ...formData, quantity: Number(e.target.value) })
+            }
+            className="p-2 border rounded"
+            required
+          />
+          <select
+            value={formData.status}
+            onChange={(e) =>
+              setFormData({ ...formData, status: e.target.value })
+            }
+            className="p-2 border rounded"
           >
-            <img src={item.imageUrl} alt={item.name} className="rounded mb-4" />
-            <h3 className="text-xl font-semibold mb-2 text-center">
-              {item.name}
-            </h3>
-            <p className="text-gray-600 mb-4 text-center">{item.description}</p>
-            <button
-              onClick={() => handleDeleteItem(item.id)}
-              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
-            >
-              Delete
-            </button>
-          </div>
-        ))}
+            <option value="Baik">Baik</option>
+            <option value="Rusak">Rusak</option>
+          </select>
+          <select
+            value={String(formData.availability)}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                availability: e.target.value === "true",
+              })
+            }
+            className="p-2 border rounded"
+          >
+            <option value="true">Available</option>
+            <option value="false">Not Available</option>
+          </select>
+        </div>
+        <button
+          type="submit"
+          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
+        >
+          Add Equipment
+        </button>
+      </form>
+
+      {/* Table of equipment */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white border-collapse border border-gray-300">
+          <thead>
+            <tr className="bg-blue-600 text-white">
+              <th className="border p-4 text-left">Name</th>
+              <th className="border p-4 text-left">Image</th>
+              <th className="border p-4 text-left">Description</th>
+              <th className="border p-4 text-left">Quantity</th>
+              <th className="border p-4 text-left">Status</th>
+              <th className="border p-4 text-left">Availability</th>
+            </tr>
+          </thead>
+          <tbody>
+            {equipmentList.map((item) => (
+              <tr key={item.id} className="hover:bg-gray-100">
+                <td className="border p-4">{item.name_equipment}</td>
+                <td className="border p-4">
+                  <img
+                    src={item.image}
+                    alt={item.name_equipment}
+                    className="w-16 h-16 object-cover"
+                  />
+                </td>
+                <td className="border p-4">{item.description || "-"}</td>
+                <td className="border p-4">{item.quantity}</td>
+                <td className="border p-4">{item.status}</td>
+                <td className="border p-4">
+                  {item.availability ? "Available" : "Not Available"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
